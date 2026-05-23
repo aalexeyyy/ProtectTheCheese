@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Under Construction – Protect the Cheese</title>
+  <link rel="icon" type="image/png" href="New Icon 512x512.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cheese:    #FFD700;
+      --cheese-dk: #F5A500;
+      --cheese-lt: #FFF3B0;
+      --rat-dark:  #2B1A0E;
+      --cream:     #FFF8E7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--rat-dark);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(255,215,0,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(255,122,47,0.06) 0%, transparent 60%),
+        repeating-linear-gradient(
+          135deg, transparent, transparent 40px,
+          rgba(255,215,0,0.015) 40px, rgba(255,215,0,0.015) 80px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Cheese hole decorations */
+    .holes-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .hole {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.04), rgba(0,0,0,0.25));
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 80px;
+      gap: 32px;
+      text-align: center;
+    }
+
+    /* Bouncing hard hat */
+    .construction-icon {
+      font-size: 5rem;
+      line-height: 1;
+      animation: bounce 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 18px rgba(255,215,0,0.45));
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0px) rotate(-4deg); }
+      50%       { transform: translateY(-14px) rotate(4deg); }
+    }
+
+    /* Heading */
+    .uc-title {
+      font-family: 'Lilita One', cursive;
+      font-size: clamp(2rem, 7vw, 3.2rem);
+      color: var(--cheese);
+      text-shadow:
+        3px 3px 0 var(--rat-dark),
+        5px 5px 0 rgba(0,0,0,0.3),
+        0 0 35px rgba(255,215,0,0.35);
+      line-height: 1.1;
+    }
+
+    .uc-sub {
+      font-size: clamp(1rem, 3vw, 1.15rem);
+      font-weight: 600;
+      color: rgba(255,248,231,0.72);
+      max-width: 420px;
+      line-height: 1.6;
+    }
+    .uc-sub span {
+      color: var(--cheese-dk);
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      max-width: 360px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cheese-dk), transparent);
+      opacity: 0.3;
+    }
+    .divider-icon { font-size: 1.2rem; filter: drop-shadow(0 0 6px rgba(255,215,0,0.5)); }
+
+    /* ── BACK BUTTON ── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,215,0,0.08);
+      border: 1.5px solid rgba(255,215,0,0.3);
+      border-radius: 14px;
+      padding: 12px 24px;
+      color: var(--cheese-lt);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .back-btn:hover {
+      transform: translateY(-3px);
+      background: rgba(255,215,0,0.14);
+      border-color: rgba(255,215,0,0.55);
+      color: var(--cheese);
+    }
+    .back-btn svg { flex-shrink: 0; }
+
+    /* ── GOOGLE PLAY BUTTON ── */
+    .gplay-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border: 2px solid var(--cheese);
+      border-radius: 16px;
+      padding: 14px 28px;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .gplay-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .gplay-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 0 4px rgba(255,215,0,0.2), 0 16px 40px rgba(0,0,0,0.5);
+      border-color: var(--cheese-lt);
+    }
+    .gplay-btn:hover::before { opacity: 1; }
+    .gplay-btn:active { transform: translateY(0) scale(0.99); }
+    .gplay-icon { width: 38px; height: 38px; flex-shrink: 0; }
+    .gplay-text { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+    .gplay-text-small {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: rgba(255,255,255,0.65); line-height: 1;
+    }
+    .gplay-text-big { font-size: 1.25rem; font-weight: 800; color: #fff; line-height: 1.15; }
+
+    /* Animations */
+    .reveal { opacity: 0; transform: translateY(18px); animation: revealUp 0.6s ease forwards; }
+    .r1 { animation-delay: 0.05s; }
+    .r2 { animation-delay: 0.18s; }
+    .r3 { animation-delay: 0.30s; }
+    .r4 { animation-delay: 0.42s; }
+    .r5 { animation-delay: 0.54s; }
+    @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: rgba(0,0,0,0.45);
+      border-top: 1px solid rgba(255,215,0,0.12);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 16px 24px;
+      flex-wrap: wrap;
+    }
+    footer a {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: rgba(255,248,231,0.55);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--cheese); }
+    footer a svg { width: 14px; height: 14px; opacity: 0.7; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="holes-layer" aria-hidden="true">
+    <div class="hole" style="width:90px;height:70px;top:8%;left:5%;opacity:0.5;transform:rotate(-12deg)"></div>
+    <div class="hole" style="width:55px;height:45px;top:18%;right:8%;opacity:0.4;transform:rotate(20deg)"></div>
+    <div class="hole" style="width:70px;height:55px;bottom:25%;right:4%;opacity:0.45;transform:rotate(-8deg)"></div>
+    <div class="hole" style="width:45px;height:38px;bottom:20%;left:12%;opacity:0.4;transform:rotate(15deg)"></div>
+  </div>
+
+  <main>
+
+    <div class="construction-icon reveal r1">🚧</div>
+
+    <h1 class="uc-title reveal r2">Under Construction</h1>
+
+    <p class="uc-sub reveal r3">
+      Sorry, this page isn't ready yet!<br />
+      Our <span>cats are working hard</span> on it —<br />
+      check back soon. 🐱🔧
+    </p>
+
+    <div class="divider reveal r3">
+      <span class="divider-icon">🧀</span>
+    </div>
+
+    <a href="index.html" class="back-btn reveal r4">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15,18 9,12 15,6"/>
+      </svg>
+      Back to Main Site
+    </a>
+
+    <a
+      href="https://play.google.com/store/apps/details?id=com.aalexeyy.protectthecheese&hl=en"
+      class="gplay-btn reveal r5"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Get Protect the Cheese on Google Play"
+    >
+      <svg class="gplay-icon" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="gp1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00C6FF"/><stop offset="100%" stop-color="#0080FF"/></linearGradient>
+          <linearGradient id="gp2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00E676"/><stop offset="100%" stop-color="#69F0AE"/></linearGradient>
+          <linearGradient id="gp3" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FF1744"/><stop offset="100%" stop-color="#FF6D00"/></linearGradient>
+          <linearGradient id="gp4" x1="100%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#FFD600"/><stop offset="100%" stop-color="#FFAB00"/></linearGradient>
+        </defs>
+        <path d="M57 21 L265 245 L57 469 C38 458 24 437 24 412 L24 80 C24 55 38 34 57 21Z" fill="url(#gp1)"/>
+        <path d="M57 469 L265 245 L349 334 L120 476 C99 488 75 483 57 469Z" fill="url(#gp2)"/>
+        <path d="M57 21 C75 7 99 2 120 14 L349 156 L265 245Z" fill="url(#gp3)"/>
+        <path d="M349 156 L453 215 C479 230 479 270 453 285 L349 344 L265 255Z" fill="url(#gp4)"/>
+      </svg>
+      <div class="gplay-text">
+        <span class="gplay-text-small">Get it on</span>
+        <span class="gplay-text-big">Google Play</span>
+      </div>
+    </a>
+
+  </main>
+
+  <footer>
+    <a href="mailto:your@email.com" aria-label="Contact via email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <polyline points="2,4 12,13 22,4"/>
+      </svg>
+      Contact
+    </a>
+    <a href="PrivacyPolicy.html" aria-label="Privacy Policy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Privacy Policy
+    </a>
+  </footer>
+
+</body>
+</html>
