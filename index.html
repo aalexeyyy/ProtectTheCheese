@@ -1,14 +1,525 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ProtectTheCheese</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Protect the Cheese – Idle Cat TD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cheese:    #FFD700;
+      --cheese-dk: #F5A500;
+      --cheese-lt: #FFF3B0;
+      --rat-dark:  #2B1A0E;
+      --rat-mid:   #4A2C0A;
+      --hole:      #E8A020;
+      --cat-orange:#FF7A2F;
+      --cat-red:   #D94E1F;
+      --cream:     #FFF8E7;
+      --text-dark: #1A0E00;
+      --text-mid:  #5C3A00;
+      --shadow:    rgba(43,26,14,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--rat-dark);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATED BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(255,215,0,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(255,122,47,0.06) 0%, transparent 60%),
+        repeating-linear-gradient(
+          135deg,
+          transparent,
+          transparent 40px,
+          rgba(255,215,0,0.015) 40px,
+          rgba(255,215,0,0.015) 80px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── CHEESE HOLES TEXTURE ── */
+    .holes-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .hole {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.04), rgba(0,0,0,0.25));
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 24px 80px;
+      gap: 0;
+    }
+
+    /* ── HERO SECTION ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Game Icon */
+    .game-icon-wrap {
+      position: relative;
+      animation: float 3.8s ease-in-out infinite;
+    }
+    .game-icon-wrap::before {
+      content: '';
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 22px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.45) 0%, transparent 75%);
+      border-radius: 50%;
+    }
+    .game-icon {
+      width: 150px;
+      height: 150px;
+      border-radius: 30px;
+      box-shadow:
+        0 0 0 4px var(--cheese),
+        0 0 0 8px var(--cheese-dk),
+        0 24px 48px rgba(0,0,0,0.5);
+      display: block;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    /* Title */
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .game-title {
+      font-family: 'Lilita One', cursive;
+      font-size: clamp(2.6rem, 8vw, 4.2rem);
+      line-height: 1.05;
+      color: var(--cheese);
+      text-shadow:
+        3px 3px 0 var(--rat-dark),
+        6px 6px 0 rgba(0,0,0,0.3),
+        0 0 40px rgba(255,215,0,0.4);
+      letter-spacing: 0.5px;
+    }
+    .game-title span {
+      color: var(--cat-orange);
+      text-shadow:
+        3px 3px 0 var(--rat-dark),
+        6px 6px 0 rgba(0,0,0,0.3),
+        0 0 40px rgba(255,122,47,0.5);
+    }
+    .subtitle {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cheese-dk);
+      opacity: 0.85;
+    }
+
+    /* Tagline */
+    .tagline {
+      font-size: clamp(1.05rem, 3vw, 1.25rem);
+      font-weight: 600;
+      color: var(--cheese-lt);
+      line-height: 1.55;
+      max-width: 520px;
+      opacity: 0.92;
+    }
+    .tagline .emoji { font-style: normal; }
+
+    /* ── DIVIDER ── */
+    .cheese-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 560px;
+      margin: 10px 0;
+    }
+    .cheese-divider::before,
+    .cheese-divider::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cheese-dk), transparent);
+      opacity: 0.4;
+    }
+    .cheese-divider-icon {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 0 8px rgba(255,215,0,0.6));
+    }
+
+    /* ── FEATURE CARDS ── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 680px;
+      margin: 16px 0 8px;
+    }
+    .feat-card {
+      background: rgba(255,215,0,0.06);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 18px;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+    .feat-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,215,0,0.1);
+      border-color: rgba(255,215,0,0.35);
+    }
+    .feat-icon {
+      font-size: 1.9rem;
+      line-height: 1;
+    }
+    .feat-title {
+      font-family: 'Lilita One', cursive;
+      font-size: 1.05rem;
+      color: var(--cheese);
+      line-height: 1.2;
+    }
+    .feat-desc {
+      font-size: 0.85rem;
+      color: rgba(255,248,231,0.75);
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    /* ── CTA BUTTON ── */
+    .cta-wrap {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .badge-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--cheese-dk);
+      opacity: 0.7;
+    }
+    .gplay-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border: 2px solid var(--cheese);
+      border-radius: 16px;
+      padding: 14px 28px;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      box-shadow:
+        0 0 0 0 rgba(255,215,0,0),
+        0 8px 32px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .gplay-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .gplay-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow:
+        0 0 0 4px rgba(255,215,0,0.2),
+        0 16px 40px rgba(0,0,0,0.5);
+      border-color: var(--cheese-lt);
+    }
+    .gplay-btn:hover::before { opacity: 1; }
+    .gplay-btn:active { transform: translateY(0) scale(0.99); }
+
+    .gplay-icon {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+    }
+    .gplay-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+    }
+    .gplay-text-small {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      line-height: 1;
+    }
+    .gplay-text-big {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: #fff;
+      line-height: 1.15;
+    }
+    .free-badge {
+      background: var(--cheese);
+      color: var(--rat-dark);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,215,0,0.5); }
+      50%       { box-shadow: 0 0 0 8px rgba(255,215,0,0); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: rgba(0,0,0,0.45);
+      border-top: 1px solid rgba(255,215,0,0.12);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 16px 24px;
+      flex-wrap: wrap;
+    }
+    footer a {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: rgba(255,248,231,0.55);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--cheese); }
+    footer a svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    /* ── SCROLL FADE IN ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      animation: revealUp 0.7s ease forwards;
+    }
+    .reveal-1 { animation-delay: 0.05s; }
+    .reveal-2 { animation-delay: 0.18s; }
+    .reveal-3 { animation-delay: 0.32s; }
+    .reveal-4 { animation-delay: 0.46s; }
+    .reveal-5 { animation-delay: 0.60s; }
+    .reveal-6 { animation-delay: 0.74s; }
+
+    @keyframes revealUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .features { grid-template-columns: 1fr 1fr; }
+      .game-icon { width: 120px; height: 120px; border-radius: 24px; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to ProtectTheCheese</h1>
-    <ul>
-        <li><a href="PrivacyPolicy.html">Privacy Policy</a></li>
-        <li><a href="app-ads.txt">App-Ads.txt</a></li>
-    </ul>
+
+  <!-- Decorative cheese holes -->
+  <div class="holes-layer" aria-hidden="true">
+    <div class="hole" style="width:90px;height:70px;top:8%;left:5%;opacity:0.5;transform:rotate(-12deg)"></div>
+    <div class="hole" style="width:55px;height:45px;top:18%;right:8%;opacity:0.4;transform:rotate(20deg)"></div>
+    <div class="hole" style="width:120px;height:90px;top:45%;left:2%;opacity:0.35;transform:rotate(5deg)"></div>
+    <div class="hole" style="width:70px;height:55px;top:55%;right:4%;opacity:0.45;transform:rotate(-8deg)"></div>
+    <div class="hole" style="width:45px;height:38px;bottom:20%;left:12%;opacity:0.4;transform:rotate(15deg)"></div>
+    <div class="hole" style="width:80px;height:65px;bottom:25%;right:10%;opacity:0.38;transform:rotate(-18deg)"></div>
+    <div class="hole" style="width:35px;height:28px;top:70%;left:45%;opacity:0.3;transform:rotate(8deg)"></div>
+  </div>
+
+  <main>
+    <div class="hero">
+
+      <!-- Game Icon -->
+      <div class="game-icon-wrap reveal reveal-1">
+        <img
+          class="game-icon"
+          src="New Icon 512x512.png"
+          alt="Protect the Cheese game icon"
+        />
+      </div>
+
+      <!-- Title -->
+      <div class="title-block reveal reveal-2">
+        <h1 class="game-title">Protect the<br /><span>Cheese</span></h1>
+        <p class="subtitle">Idle Cat Tower Defense</p>
+      </div>
+
+      <!-- Tagline -->
+      <p class="tagline reveal reveal-3">
+        The world's most legendary cheese is under siege. <span class="emoji">🧀</span><br />
+        Recruit battle-hardened cats, arm them to the teeth, and hold the line against endless waves of ravenous rats. <span class="emoji">🐱⚔️🐀</span>
+      </p>
+
+      <!-- Divider -->
+      <div class="cheese-divider reveal reveal-3">
+        <span class="cheese-divider-icon">🧀</span>
+      </div>
+
+      <!-- Feature cards -->
+      <div class="features">
+        <div class="feat-card reveal reveal-3">
+          <span class="feat-icon">🐱</span>
+          <div class="feat-title">5 Unique Cat Defenders</div>
+          <div class="feat-desc">From shielding guardians to cryo-specialists and elite marksmen — build your dream squad.</div>
+        </div>
+        <div class="feat-card reveal reveal-4">
+          <span class="feat-icon">🛠️</span>
+          <div class="feat-title">Game-Changing Gear</div>
+          <div class="feat-desc">Equipment rewrites combat entirely — dual guns, poison clouds, teleporters, blizzards and more.</div>
+        </div>
+        <div class="feat-card reveal reveal-4">
+          <span class="feat-icon">🗺️</span>
+          <div class="feat-title">360° Grid Strategy</div>
+          <div class="feat-desc">No fixed paths. Place defenders anywhere on a full grid surrounding the cheese — your call, your risk.</div>
+        </div>
+        <div class="feat-card reveal reveal-5">
+          <span class="feat-icon">⚔️</span>
+          <div class="feat-title">Endless Rat Waves</div>
+          <div class="feat-desc">The swarm never stops. Adapt your tactics, upgrade your army, and don't let them take a single bite.</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-wrap reveal reveal-6">
+        <span class="badge-label">Free to Play</span>
+        <a
+          href="https://play.google.com/store/apps/details?id=com.aalexeyy.protectthecheese&hl=en"
+          class="gplay-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Get Protect the Cheese on Google Play"
+        >
+          <!-- Google Play icon -->
+          <svg class="gplay-icon" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="gp1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00C6FF"/>
+                <stop offset="100%" stop-color="#0080FF"/>
+              </linearGradient>
+              <linearGradient id="gp2" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00E676"/>
+                <stop offset="100%" stop-color="#69F0AE"/>
+              </linearGradient>
+              <linearGradient id="gp3" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FF1744"/>
+                <stop offset="100%" stop-color="#FF6D00"/>
+              </linearGradient>
+              <linearGradient id="gp4" x1="100%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#FFD600"/>
+                <stop offset="100%" stop-color="#FFAB00"/>
+              </linearGradient>
+            </defs>
+            <!-- Top-left (blue) -->
+            <path d="M57 21 L265 245 L57 469 C38 458 24 437 24 412 L24 80 C24 55 38 34 57 21Z" fill="url(#gp1)"/>
+            <!-- Bottom-right (green) -->
+            <path d="M57 469 L265 245 L349 334 L120 476 C99 488 75 483 57 469Z" fill="url(#gp2)"/>
+            <!-- Top-right (red) -->
+            <path d="M57 21 C75 7 99 2 120 14 L349 156 L265 245Z" fill="url(#gp3)"/>
+            <!-- Right (yellow) -->
+            <path d="M349 156 L453 215 C479 230 479 270 453 285 L349 344 L265 255Z" fill="url(#gp4)"/>
+          </svg>
+          <div class="gplay-text">
+            <span class="gplay-text-small">Get it on</span>
+            <span class="gplay-text-big">Google Play</span>
+          </div>
+        </a>
+        <span class="free-badge">🧀 Free Download</span>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <a href="mailto:your@email.com" aria-label="Contact via email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <polyline points="2,4 12,13 22,4"/>
+      </svg>
+      Contact
+    </a>
+    <a href="PrivacyPolicy.html" aria-label="Privacy Policy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Privacy Policy
+    </a>
+  </footer>
+
 </body>
 </html>
